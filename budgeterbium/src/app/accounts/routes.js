@@ -10,5 +10,10 @@ export default [
     path: '/accounts/create',
     component: components.CreateEditAccount,
     name: 'createEditAccount'
+  },
+  {
+    path: '/accounts/:accountId/edit',
+    component: components.CreateEditAccount,
+    name: 'editAccount'
   }
 ]

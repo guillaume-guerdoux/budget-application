@@ -6,7 +6,7 @@
       View all accounts
     </router-link>
 
-    <form class="form" @submit.prevent="saveNewAccount">
+    <form class="form" @submit.prevent="processSave">
       <label for="name" class="label">Name</label>
       <p class="control">
         <input type="text" class="input"
@@ -28,7 +28,8 @@
       <label for="balance" class="label">Balance</label>
       <p class="control">
         <input type="text" class="input"
-               name="balance" v-model="selectedAccount.balance">
+               name="balance" v-model="selectedAccount.balance" v-if="!editing">
+        <span v-else> To update your balande, add a balance adjusting transaction </span>
       </p>
 
       <div class="control is-grouped">
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { CATEGORIES } from '../../../consts'
 
 export default {
@@ -53,19 +54,58 @@ export default {
   data: () => {
     return {
       categories: CATEGORIES,
-      selectedAccount: {}
+      selectedAccount: {},
+      editing: false
+    }
+  },
+
+  // when the component is mounter https://alligator.io/vuejs/component-lifecycle/
+  mounted () {
+    if ('accountId' in this.$route.params) {
+      let selectedAccount = this.getAccountById(this.$route.params.accountId)
+      if (selectedAccount) {
+        this.editing = true
+        this.selectedAccount = {
+          name: selectedAccount.name,
+          category: selectedAccount.category,
+          id: selectedAccount.id
+        }
+      }
     }
   },
 
   methods: {
     ...mapActions([
-      'addAccount'
+      'addAccount',
+      'updateAccount'
     ]),
+
+    resetAndGo () {
+      this.selectedAccount = {}
+      this.$router.push({ name: 'accountsListView' })
+    },
+
     saveNewAccount () {
       this.addAccount(this.selectedAccount).then(() => {
-        this.selectedAccount = {}
+        this.resetAndGo()
       })
+    },
+
+    saveAccount () {
+      this.updateAccount(this.selectedAccount).then(() => {
+        this.resetAndGo()
+      })
+    },
+
+    processSave () {
+      this.editing ? this.saveAccount() : this.saveNewAccount()
     }
+  },
+
+  computed: {
+    ...mapGetters([
+      'getAccountById'
+    ])
   }
 }
 </script>
