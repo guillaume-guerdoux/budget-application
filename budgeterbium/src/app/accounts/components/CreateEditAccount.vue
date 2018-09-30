@@ -62,22 +62,25 @@ export default {
   // when the component is mounter https://alligator.io/vuejs/component-lifecycle/
   mounted () {
     if ('accountId' in this.$route.params) {
-      let selectedAccount = this.getAccountById(this.$route.params.accountId)
-      if (selectedAccount) {
-        this.editing = true
-        this.selectedAccount = {
-          name: selectedAccount.name,
-          category: selectedAccount.category,
-          id: selectedAccount.id
+      this.loadAccounts().then(() => {
+        let selectedAccount = this.getAccountById(this.$route.params.accountId)
+        if (selectedAccount) {
+          this.editing = true
+          this.selectedAccount = {
+            name: selectedAccount.name,
+            category: selectedAccount.category,
+            id: selectedAccount.id
+          }
         }
-      }
+      })
     }
   },
 
   methods: {
     ...mapActions([
       'addAccount',
-      'updateAccount'
+      'updateAccount',
+      'loadAccounts'
     ]),
 
     resetAndGo () {
