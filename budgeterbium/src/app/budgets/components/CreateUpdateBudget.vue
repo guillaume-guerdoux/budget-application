@@ -7,7 +7,11 @@
     <form class="form" @submit.prevent="processSave">
       <label for="month" class="label">Month</label>
       <p class="control">
-        <input type="text" class="input" name="month" v-model="selectedBudget.month">
+        <datepicker name="month"
+                    input-class="input"
+                    format="MMMM yyyy"
+                    v-model="selectedBudget.month">
+        </datepicker>
       </p>
       <label for="budgeted" class="label">Budgeted amount</label>
       <p class="control">
@@ -31,9 +35,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import Datepicker from 'vuejs-datepicker'
 
 export default {
   name: 'budget-create-edit-view',
+
+  components: {
+    Datepicker
+  },
 
   data: () => {
     return {
