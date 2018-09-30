@@ -1,10 +1,10 @@
 import { guid } from '../../../utils'
-import { saveAccount, removeAccount, fetchAccounts } from '../api'
+import { saveAccount, deleteAccount as deleteAccountFromAPI, fetchAccounts } from '../api'
 
-export const addAccount = ({ commit }, data) => {
+export const createAccount = ({ commit }, data) => {
   let id = guid()
   let account = Object.assign({id: id}, data)
-  commit('ADD_ACCOUNT', { account: account })
+  commit('CREATE_ACCOUNT', { account: account })
   saveAccount(account).then((value) => {
     // we've saved the accound ,what now
   })
@@ -17,7 +17,7 @@ export const updateAccount = ({ commit }, data) => {
 
 export const deleteAccount = ({ commit }, data) => {
   commit('DELETE_ACCOUNT', { account: data })
-  removeAccount(data)
+  deleteAccountFromAPI(data)
 }
 
 export const loadAccounts = (state) => {
@@ -25,9 +25,7 @@ export const loadAccounts = (state) => {
   // later we might to be able to force reaload theom
   if (!state.accounts || Object.keys(state.accounts).length === 0) {
     return fetchAccounts().then((res) => {
-      let accounts = {}
-      Object.keys(res).forEach((key) => { accounts[res[key].id] = res[key] })
-      state.commit('LOAD_ACCOUNTS', accounts)
+      state.commit('LOAD_ACCOUNTS', res)
     })
   }
 }

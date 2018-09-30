@@ -12,7 +12,7 @@
         ${{ account.balance }}
 
         <a v-on:click="confirmDeleteAccount(account)">Delete</a>
-        <router-link :to="{ name: 'editAccount', params: { accountId: account.id }}">
+        <router-link :to="{ name: 'updateAccount', params: { accountId: account.id }}">
           Edit
         </router-link>
       </li>

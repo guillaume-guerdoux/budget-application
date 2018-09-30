@@ -66,11 +66,14 @@ export default {
         let selectedAccount = this.getAccountById(this.$route.params.accountId)
         if (selectedAccount) {
           this.editing = true
+          this.selectedAccount = Object.assign({}, selectedAccount)
+          /*
           this.selectedAccount = {
-            name: selectedAccount.name,
-            category: selectedAccount.category,
-            id: selectedAccount.id
+          name: selectedAccount.name,
+          category: selectedAccount.category,
+          id: selectedAccount.id
           }
+          */
         }
       })
     }
@@ -78,7 +81,7 @@ export default {
 
   methods: {
     ...mapActions([
-      'addAccount',
+      'createAccount',
       'updateAccount',
       'loadAccounts'
     ]),
@@ -89,7 +92,7 @@ export default {
     },
 
     saveNewAccount () {
-      this.addAccount(this.selectedAccount).then(() => {
+      this.createAccount(this.selectedAccount).then(() => {
         this.resetAndGo()
       })
     },
