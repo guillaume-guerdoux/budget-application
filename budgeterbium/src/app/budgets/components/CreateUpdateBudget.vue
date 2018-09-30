@@ -2,6 +2,8 @@
   <div id="budget-create-edit-view">
     You can create and edit budgets with me, woot!
 
+    <router-link :to="{ name: 'budgetsList' }">View all budgets</router-link>
+
     <form class="form" @submit.prevent="processSave">
       <label for="month" class="label">Month</label>
       <p class="control">
@@ -21,6 +23,7 @@
         <p class="control">
           <button class="button is-primary">Submit</button>
         </p>
+        <router-link :to="{ name: 'budgetsList' }"><button class="button is-link">Cancel</button></router-link>
       </div>
     </form>
   </div>
@@ -38,7 +41,7 @@ export default {
     }
   },
 
-  mounter () {
+  mounted () {
     if ('budgetId' in this.$route.params) {
       this.loadBudgets().then(() => {
         let selectedBudget = this.getBudgetById(this.$route.params.budgetId)
@@ -58,11 +61,17 @@ export default {
 
     resetAndGo () {
       this.selectedBudget = {}
-      // todo : redirect here
+      this.$router.push({ name: 'budgetsList' })
     },
 
     saveNewBudget () {
       this.createBudget(this.selectedBudget).then(() => {
+        this.resetAndGo()
+      })
+    },
+
+    saveBudget () {
+      this.updateBudget(this.selectedBudget).then(() => {
         this.resetAndGo()
       })
     },

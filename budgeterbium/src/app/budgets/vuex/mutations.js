@@ -7,7 +7,7 @@ export default {
     state.budgets[payload.budget.id] = payload.budget
   },
 
-  LOAD_BUDGET (state, payload) {
+  LOAD_BUDGETS (state, payload) {
     state.budgets = payload
   }
 }
