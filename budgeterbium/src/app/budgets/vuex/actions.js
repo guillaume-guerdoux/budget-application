@@ -1,7 +1,22 @@
 import { guid } from '../../../utils'
 import { saveBudget, fetchBudgets } from '../api'
+import moment from 'moment'
 
-export const createBudget = ({ commit }, data) => {
+const verifyUniqueMonth = (budgets, budget) => {
+  // accepts a list of budgets and the budget being updated
+  // return true if thre is no date collision
+  // return false is a budget already exists in budgets with the same month as budget
+  let month = moment(budget.month)
+  return !Object.values(budgets).find((o) => {
+    return month.isSame(o.month, 'month')
+  })
+}
+
+export const createBudget = ({ commit, state }, data) => {
+  let unique = verifyUniqueMonth(state.budgets, data)
+  if (!unique) {
+    return Promise.reject(new Error('A budget already exists for this month'))
+  }
   let id = guid()
   let budget = Object.assign({ id: id }, data)
   commit('CREATE_BUDGET', { budget: budget })
